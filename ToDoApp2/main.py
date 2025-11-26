@@ -56,22 +56,57 @@ except Exception:  # pragma: no cover - fallback path
 scheduler: Optional[AsyncIOScheduler] = None
 
 
-@app.on_event('startup')
-async def on_startup():
-    """Initialize database connection on startup."""
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """
+    Lifecycle manager for the FastAPI app.
+    Handles startup and shutdown events.
+    """
+    # Startup
     logger.info("Starting application...")
+    
+    # DEBUG: Print environment info
+    mongo_url = settings.mongodb_url
+    # Mask password for logs
+    if "@" in mongo_url:
+        # Attempt to mask the password part if present
+        parts = mongo_url.split('@')
+        if len(parts) > 1:
+            protocol_and_auth = parts[0]
+            host_port_db = parts[-1]
+            
+            protocol_end_idx = protocol_and_auth.find('://')
+            if protocol_end_idx != -1:
+                protocol = protocol_and_auth[:protocol_end_idx+3]
+                masked_url = f"{protocol}***:***@{host_port_db}"
+            else:
+                # Fallback if no protocol or unexpected format
+                masked_url = f"***:***@{host_port_db}"
+            logger.info(f"DEBUG: Attempting to connect to MongoDB at: {masked_url}")
+        else:
+            logger.info(f"DEBUG: Attempting to connect to MongoDB at: {mongo_url}")
+    else:
+        logger.info(f"DEBUG: Attempting to connect to MongoDB at: {mongo_url}")
+        
+    logger.info(f"DEBUG: MONGODB_URL env var is set: {'MONGODB_URL' in os.environ}")
+    
     await init_db()
+    
     if settings.daily_reset_enabled:
         _schedule_daily_reset()
+        if scheduler and not scheduler.running:
+            scheduler.start()
+            logger.info("Scheduler started")
+    
     logger.info("Application started successfully")
-
-
-@app.on_event('shutdown')
-async def on_shutdown():
-    """Close database connection on shutdown."""
+    
+    yield
+    
+    # Shutdown
     logger.info("Shutting down application...")
     if scheduler and scheduler.running:
         scheduler.shutdown(wait=False)
+        logger.info("Scheduler shutdown")
     await close_db()
     logger.info("Application shutdown complete")
 
