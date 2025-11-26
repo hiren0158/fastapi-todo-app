@@ -2,6 +2,7 @@
 FastAPI Todo Application - Main Entry Point
 """
 import logging
+import os
 from typing import Optional
 from zoneinfo import ZoneInfo
 from contextlib import asynccontextmanager
@@ -23,30 +24,7 @@ from .services.notifications import send_daily_summaries_and_reset
 setup_logging()
 logger = logging.getLogger(__name__)
 
-# Create FastAPI application
-app = FastAPI(
-    title=settings.app_name,
-    debug=settings.debug,
-    version="1.0.0"
-)
-
-# Add CORS middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Configure this properly for production
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# Include routers
-app.include_router(auth.router)
-app.include_router(todos.router)
-app.include_router(admin.router)
-app.include_router(users.router)
-
-# Mount static files
-app.mount("/static", StaticFiles(directory="ToDoApp2/static"), name='static')
+# --- Configuration & Global State ---
 
 try:
     APP_TIMEZONE = ZoneInfo(settings.timezone)
@@ -56,6 +34,20 @@ except Exception:  # pragma: no cover - fallback path
 
 scheduler: Optional[AsyncIOScheduler] = None
 
+def _schedule_daily_reset() -> None:
+    global scheduler
+    if scheduler is None:
+        scheduler = AsyncIOScheduler(timezone=APP_TIMEZONE)
+
+    trigger = CronTrigger(hour=23, minute=59, timezone=APP_TIMEZONE)
+    scheduler.add_job(
+        send_daily_summaries_and_reset,
+        trigger,
+        id="daily-summary",
+        replace_existing=True,
+    )
+    scheduler.start()
+    logger.info("Daily summary + purge scheduled for 23:59 (%s)", APP_TIMEZONE)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -112,6 +104,35 @@ async def lifespan(app: FastAPI):
     logger.info("Application shutdown complete")
 
 
+# --- App Creation ---
+
+app = FastAPI(
+    title=settings.app_name,
+    debug=settings.debug,
+    version="1.0.0",
+    lifespan=lifespan
+)
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Configure this properly for production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Include routers
+app.include_router(auth.router)
+app.include_router(todos.router)
+app.include_router(admin.router)
+app.include_router(users.router)
+
+# Mount static files
+app.mount("/static", StaticFiles(directory="ToDoApp2/static"), name='static')
+
+# --- Endpoints ---
+
 @app.get('/')
 def root(request: Request):
     """Redirect root to todos page."""
@@ -122,20 +143,3 @@ def root(request: Request):
 def health_check():
     """Health check endpoint."""
     return {'status': 'healthy', 'app': settings.app_name}
-
-
-def _schedule_daily_reset() -> None:
-    global scheduler
-    if scheduler is None:
-        scheduler = AsyncIOScheduler(timezone=APP_TIMEZONE)
-
-    trigger = CronTrigger(hour=23, minute=59, timezone=APP_TIMEZONE)
-    scheduler.add_job(
-        send_daily_summaries_and_reset,
-        trigger,
-        id="daily-summary",
-        replace_existing=True,
-    )
-    scheduler.start()
-    logger.info("Daily summary + purge scheduled for 23:59 (%s)", APP_TIMEZONE)
-
