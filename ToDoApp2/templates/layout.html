@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Modern Todo Application - Manage your tasks beautifully with stunning UI">
+
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        crossorigin="anonymous">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', path='/css/bootstrap.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', path='/css/base.css')}}">
+
+    <title>✨ Todo App - Beautiful Task Management</title>
+</head>
+
+<body>
+    <!-- Navigation -->
+    {% include 'navbar.html' %}
+
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content%}
+        {% endblock %}
+    </main>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', path='/js/jquery-slim.js')}}"></script>
+    <script src="{{ url_for('static', path='/js/popper.js')}}"></script>
+    <script src="{{ url_for('static', path='/js/bootstrap.js')}}"></script>
+    <script src="{{ url_for('static', path='/js/animations.js')}}" defer></script>
+    <script src="{{ url_for('static', path='/js/base.js')}}?v=2" defer></script>
+</body>
+
+</html>

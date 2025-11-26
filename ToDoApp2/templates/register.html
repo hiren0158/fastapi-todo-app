@@ -1,0 +1,129 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container" style="max-width: 750px; margin-top: 3rem;">
+    <div class="card animate-on-scroll">
+        <div class="card-header">
+            <i class="fas fa-user-plus"
+                style="font-size: 2rem; margin-bottom: 0.5rem; display: block; animation: elasticPop 1.5s ease infinite;"></i>
+            Create Your Account
+        </div>
+        <div class="card-body">
+            {% if error %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-circle" style="margin-right: 8px;"></i>
+                <strong>Error!</strong> {{ error }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endif %}
+            {% if success %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle" style="margin-right: 8px;"></i>
+                <strong>Success!</strong> {{ success }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endif %}
+
+            {% if auto_redirect %}
+            <script>
+                // Fallback: if server renders success page, redirect after 2 seconds
+                setTimeout(function () {
+                    window.location.href = '/auth/login-page';
+                }, 2000);
+            </script>
+            {% endif %}
+
+            <form id="registerForm" method="POST" action="/auth/" class="stagger-list">
+                <!-- Personal Information Section -->
+                <div style="margin-bottom: 2rem;">
+                    <h6
+                        style="color: var(--text-light); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem; opacity: 0.8;">
+                        <i class="fas fa-id-card" style="margin-right: 6px;"></i>Personal Information
+                    </h6>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>
+                                <i class="fas fa-envelope" style="margin-right: 6px;"></i>Email
+                            </label>
+                            <input type="email" class="form-control" name="email" placeholder="your@email.com" required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>
+                                <i class="fas fa-user" style="margin-right: 6px;"></i>Username
+                            </label>
+                            <input type="text" class="form-control" name="username" placeholder="Choose a username"
+                                required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>
+                                <i class="fas fa-user-circle" style="margin-right: 6px;"></i>First Name
+                            </label>
+                            <input type="text" class="form-control" name="firstname" placeholder="First name" required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>
+                                <i class="fas fa-user-circle" style="margin-right: 6px;"></i>Last Name
+                            </label>
+                            <input type="text" class="form-control" name="lastname" placeholder="Last name" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-briefcase" style="margin-right: 6px;"></i>Role
+                        </label>
+                        <input type="text" class="form-control" name="role"
+                            placeholder="e.g., Developer, Manager, Student" required>
+                    </div>
+                </div>
+
+                <!-- Security Section -->
+                <div style="margin-bottom: 1.5rem;">
+                    <h6
+                        style="color: var(--text-light); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem; opacity: 0.8;">
+                        <i class="fas fa-shield-alt" style="margin-right: 6px;"></i>Security
+                    </h6>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>
+                                <i class="fas fa-lock" style="margin-right: 6px;"></i>Password
+                            </label>
+                            <input type="password" class="form-control" name="password" autocomplete="new-password"
+                                placeholder="Create a password" required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>
+                                <i class="fas fa-lock" style="margin-right: 6px;"></i>Verify Password
+                            </label>
+                            <input type="password" class="form-control" name="password2" autocomplete="new-password"
+                                placeholder="Confirm password" required>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary ripple"
+                    style="width: 100%; margin-top: 1rem; font-size: 1rem; padding: 16px;">
+                    <i class="fas fa-rocket" style="margin-right: 8px;"></i>Create Account
+                </button>
+            </form>
+        </div>
+        <div class="card-footer text-muted">
+            <i class="fas fa-sign-in-alt" style="margin-right: 6px;"></i>
+            Already have an account? <a href="/auth/login-page">Login here</a>
+        </div>
+    </div>
+
+    <!-- Floating decorative elements -->
+    <div
+        style="position: absolute; top: 15%; right: 5%; width: 70px; height: 70px; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; opacity: 0.12; animation: floatFast 5s ease-in-out infinite;">
+    </div>
+    <div
+        style="position: absolute; bottom: 15%; left: 5%; width: 90px; height: 90px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%; opacity: 0.12; animation: floatMedium 7s ease-in-out infinite;">
+    </div>
+</div>
+{% endblock %}

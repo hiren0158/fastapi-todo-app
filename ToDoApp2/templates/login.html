@@ -1,0 +1,46 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container" style="max-width: 600px; margin-top: 5rem;">
+    <div class="card animate-on-scroll">
+        <div class="card-header">
+            <i class="fas fa-user-circle"
+                style="font-size: 2rem; margin-bottom: 0.5rem; display: block; animation: elasticPop 1.5s ease infinite;"></i>
+            Welcome Back
+        </div>
+        <div class="card-body">
+            <form id="loginForm" class="stagger-list">
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-user" style="margin-right: 6px;"></i>Username
+                    </label>
+                    <input type="text" class="form-control" name="username" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-lock" style="margin-right: 6px;"></i>Password
+                    </label>
+                    <input type="password" class="form-control" name="password" placeholder="Enter your password"
+                        required>
+                </div>
+                <button type="submit" class="btn btn-primary ripple"
+                    style="width: 100%; margin-top: 1rem; font-size: 1rem; padding: 12px;">
+                    <i class="fas fa-sign-in-alt" style="margin-right: 8px;"></i>Login
+                </button>
+            </form>
+        </div>
+        <div class="card-footer text-muted">
+            <i class="fas fa-user-plus" style="margin-right: 6px;"></i>
+            Don't have an account? <a href="/auth/register-page">Register here</a>
+        </div>
+    </div>
+
+    <!-- Floating decorative elements -->
+    <div
+        style="position: absolute; top: 20%; left: 10%; width: 60px; height: 60px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; opacity: 0.1; animation: floatFast 6s ease-in-out infinite;">
+    </div>
+    <div
+        style="position: absolute; bottom: 20%; right: 10%; width: 80px; height: 80px; background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; opacity: 0.1; animation: floatMedium 8s ease-in-out infinite;">
+    </div>
+</div>
+{% endblock %}

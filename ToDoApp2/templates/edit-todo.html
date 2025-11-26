@@ -1,0 +1,88 @@
+{% include 'layout.html' %}
+
+<div class="container" style="max-width: 650px; margin-top: 2rem;">
+    <div class="card animate-on-scroll">
+        <div class="card-header">
+            <i class="fas fa-edit"
+                style="font-size: 2rem; margin-bottom: 0.5rem; display: block; animation: bounce 2s infinite;"></i>
+            Edit Your Todo
+        </div>
+        <div class="card-body">
+            <form id="editTodoForm" class="stagger-list">
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-heading" style="margin-right: 6px;"></i>Title
+                    </label>
+                    <input type="text" class="form-control" name="title" value="{{todo.title}}" required>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-align-left" style="margin-right: 6px;"></i>Description
+                    </label>
+                    <textarea name="description" class="form-control" rows="5" required>{{todo.description}}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-flag" style="margin-right: 6px;"></i>Priority Level
+                    </label>
+                    <select name="priority" class="form-control" style="font-weight: 600;">
+                        <option value="1" {% if todo.priority==1 %} selected="selected" {% endif %}>🟢 1 - Low Priority
+                        </option>
+                        <option value="2" {% if todo.priority==2 %} selected="selected" {% endif %}>🟡 2 - Below Medium
+                        </option>
+                        <option value="3" {% if todo.priority==3 %} selected="selected" {% endif %}>🟠 3 - Medium
+                            Priority</option>
+                        <option value="4" {% if todo.priority==4 %} selected="selected" {% endif %}>🟠 4 - Above Medium
+                        </option>
+                        <option value="5" {% if todo.priority==5 %} selected="selected" {% endif %}>🔴 5 - High Priority
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group form-check"
+                    style="background: rgba(67, 233, 123, 0.1); border: 2px solid rgba(67, 233, 123, 0.3);">
+                    <input type="checkbox" class="form-check-input" name="complete" id="completeCheck" {% if
+                        todo.complete %} checked {% endif %}>
+                    <label for="completeCheck" class="form-check-label" style="font-weight: 600; font-size: 1rem;">
+                        <i class="fas fa-check-circle" style="margin-right: 6px; color: #43e97b;"></i>
+                        Mark as Complete
+                    </label>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap;">
+                    <button type="submit" class="btn btn-primary ripple"
+                        style="flex: 1; min-width: 140px; padding: 14px; font-size: 1rem;">
+                        <i class="fas fa-save" style="margin-right: 8px;"></i>Save Changes
+                    </button>
+                    <button id="deleteButton" type="button" class="btn btn-danger ripple"
+                        style="flex: 0 0 auto; padding: 14px 24px; font-size: 1rem;">
+                        <i class="fas fa-trash-alt" style="margin-right: 8px;"></i>Delete
+                    </button>
+                    <a href="/todos/todo-page" class="btn btn-success ripple"
+                        style="flex: 0 0 auto; padding: 14px 24px; font-size: 1rem;">
+                        <i class="fas fa-arrow-left" style="margin-right: 8px;"></i>Back
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Floating decorative elements -->
+    <div
+        style="position: absolute; top: 15%; left: -8%; width: 110px; height: 110px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 40% 60% 60% 40% / 60% 40% 60% 40%; opacity: 0.12; animation: floatFast 6s ease-in-out infinite; z-index: -1;">
+    </div>
+    <div
+        style="position: absolute; bottom: 15%; right: -8%; width: 90px; height: 90px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 60% 40% 40% 60% / 40% 60% 40% 60%; opacity: 0.12; animation: floatSlow 8s ease-in-out infinite; z-index: -1;">
+    </div>
+</div>
+
+<script>
+    // Add confetti celebration when marking task as complete
+    document.getElementById('completeCheck')?.addEventListener('change', function (e) {
+        if (e.target.checked && typeof celebrateWithConfetti === 'function') {
+            celebrateWithConfetti();
+        }
+    });
+</script>

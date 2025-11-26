@@ -1,0 +1,166 @@
+{% include 'layout.html' %}
+
+<div class="container" style="max-width: 950px; margin-top: 2rem;">
+    <div class="card todo-card animate-on-scroll">
+        <div class="card-header todo-header">
+            <div class="todo-header__title">
+                <span class="todo-header__icon">
+                    <i class="fas fa-tasks"></i>
+                </span>
+                <div>
+                    <div class="todo-header__label">Your Todos</div>
+                    <small>Plan and review your day</small>
+                </div>
+            </div>
+            <div class="todo-header__date">
+                <i class="fas fa-calendar-day"></i>
+                <div>
+                    <span>Today</span>
+                    <strong>{{ today_date }}</strong>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <h5 class="card-title">
+                    <i class="fas fa-clipboard-check" style="margin-right: 10px;"></i>
+                    Manage Your Tasks
+                </h5>
+                <p class="card-text">
+                    Keep track of everything that needs to be done
+                </p>
+            </div>
+
+            {% if todos %}
+            <!-- Stats Dashboard -->
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                {% set completed_count = todos | selectattr('complete', 'equalto', true) | list | length %}
+                {% set pending_count = todos | selectattr('complete', 'equalto', false) | list | length %}
+                {% set total_count = todos | length %}
+
+                <div
+                    style="background: rgba(67, 233, 123, 0.15); padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid rgba(67, 233, 123, 0.3); text-align: center; animation: fadeInScale 0.5s ease;">
+                    <div style="font-size: 2.5rem; font-weight: 800; color: #43e97b;">{{ total_count }}</div>
+                    <div style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 0.5rem;">
+                        <i class="fas fa-list" style="margin-right: 6px;"></i>Total
+                    </div>
+                </div>
+
+                <div
+                    style="background: rgba(79, 172, 254, 0.15); padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid rgba(79, 172, 254, 0.3); text-align: center; animation: fadeInScale 0.6s ease;">
+                    <div style="font-size: 2.5rem; font-weight: 800; color: #4facfe;">{{ pending_count }}</div>
+                    <div style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 0.5rem;">
+                        <i class="fas fa-clock" style="margin-right: 6px;"></i>Pending
+                    </div>
+                </div>
+
+                <div
+                    style="background: rgba(102, 126, 234, 0.15); padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid rgba(102, 126, 234, 0.3); text-align: center; animation: fadeInScale 0.7s ease;">
+                    <div style="font-size: 2.5rem; font-weight: 800; color: #667eea;">{{ completed_count }}</div>
+                    <div style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 0.5rem;">
+                        <i class="fas fa-check-double" style="margin-right: 6px;"></i>Completed
+                    </div>
+                </div>
+            </div>
+
+            <!-- Todos Table -->
+            <div style="overflow-x: auto;">
+                <table class="table table-hover todo-table">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width: 60px;">#</th>
+                            <th scope="col" style="text-align: left;">
+                                <i class="fas fa-heading" style="margin-right: 6px;"></i>Task
+                            </th>
+                            <th scope="col" style="text-align: left;">
+                                <i class="fas fa-flag" style="margin-right: 6px;"></i>Priority
+                            </th>
+                            <th scope="col" style="width: 120px; text-align: center;">
+                                <i class="fas fa-cog" style="margin-right: 6px;"></i>Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for todo in todos %}
+                        {% if todo.complete == False %}
+                        <tr class="pointer">
+                            <td style="font-size: 1.2rem; font-weight: 700;">{{loop.index}}</td>
+                            <td style="text-align: left; font-weight: 600; font-size: 1.05rem;">
+                                <i class="far fa-circle" style="margin-right: 8px; color: var(--text-muted);"></i>
+                                {{todo.title}}
+                            </td>
+                            <td style="text-align: left;">
+                                {% if todo.priority == 5 %}
+                                <span
+                                    style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%); padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; display: inline-block;">
+                                    <i class="fas fa-fire" style="margin-right: 4px;"></i>High
+                                </span>
+                                {% elif todo.priority >= 3 %}
+                                <span
+                                    style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; display: inline-block;">
+                                    <i class="fas fa-bolt" style="margin-right: 4px;"></i>Medium
+                                </span>
+                                {% else %}
+                                <span
+                                    style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; display: inline-block;">
+                                    <i class="fas fa-check" style="margin-right: 4px;"></i>Low
+                                </span>
+                                {% endif %}
+                            </td>
+                            <td style="text-align: center;">
+                                <button onclick="window.location.href='edit-todo-page/{{todo.id}}'" type="button"
+                                    class="btn btn-info ripple" style="padding: 8px 20px; font-size: 0.85rem;">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr class="pointer" style="background: rgba(67, 233, 123, 0.12) !important;">
+                            <td style="font-size: 1.2rem; font-weight: 700; opacity: 0.7;">{{loop.index}}</td>
+                            <td class="strike-through-td"
+                                style="text-align: left; font-weight: 600; font-size: 1.05rem;">
+                                <i class="fas fa-check-circle" style="margin-right: 8px; color: #43e97b;"></i>
+                                {{todo.title}}
+                            </td>
+                            <td style="text-align: left;">
+                                <span
+                                    style="background: rgba(67, 233, 123, 0.3); padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; display: inline-block;">
+                                    <i class="fas fa-check-double" style="margin-right: 4px;"></i>Done
+                                </span>
+                            </td>
+                            <td style="text-align: center;">
+                                <button onclick="window.location.href='edit-todo-page/{{todo.id}}'" type="button"
+                                    class="btn btn-info ripple" style="padding: 8px 20px; font-size: 0.85rem;">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% else %}
+            <!-- Empty State -->
+            <div style="padding: 4rem 2rem; text-align: center;" class="animate-on-scroll">
+                <div style="font-size: 5rem; opacity: 0.3; animation: floatMedium 4s ease-in-out infinite;">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <h4 style="margin-top: 1.5rem; color: var(--text-light); font-size: 1.75rem; font-weight: 700;">No todos
+                    yet</h4>
+                <p style="color: var(--text-muted); margin-bottom: 2.5rem; font-size: 1.1rem;">Get started by creating
+                    your first todo!</p>
+            </div>
+            {% endif %}
+
+            <!-- Add Todo Button -->
+            <div style="text-align: center; margin-top: 2.5rem;">
+                <a href="add-todo-page" class="btn btn-primary ripple" style="padding: 14px 36px; font-size: 1rem;">
+                    <i class="fas fa-plus-circle" style="margin-right: 8px;"></i>Add New Todo
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

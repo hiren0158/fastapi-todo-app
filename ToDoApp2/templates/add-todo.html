@@ -1,0 +1,72 @@
+{% include 'layout.html'%}
+
+<div class="container" style="max-width: 650px; margin-top: 2rem;">
+    <div class="card todo-card animate-on-scroll">
+        <div class="card-header">
+            <i class="fas fa-plus-square"
+                style="font-size: 2rem; margin-bottom: 0.5rem; display: block; animation: bounce 2s infinite;"></i>
+            Create New Todo
+        </div>
+        <div class="card-body">
+            <form id="todoForm" class="stagger-list">
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-heading" style="margin-right: 6px;"></i>Title
+                    </label>
+                    <input type="text" class="form-control" name="title" placeholder="What needs to be done?" required>
+                    <small style="color: var(--text-muted); margin-top: 0.5rem; display: block; font-size: 0.85rem;">
+                        <i class="fas fa-info-circle" style="margin-right: 4px;"></i>Give your task a clear, concise
+                        title
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-align-left" style="margin-right: 6px;"></i>Description
+                    </label>
+                    <textarea class="form-control" rows="5" name="description"
+                        placeholder="Add more details about this task..." required></textarea>
+                    <small style="color: var(--text-muted); margin-top: 0.5rem; display: block; font-size: 0.85rem;">
+                        <i class="fas fa-info-circle" style="margin-right: 4px;"></i>Provide any additional context or
+                        details
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-flag" style="margin-right: 6px;"></i>Priority Level
+                    </label>
+                    <select class="form-control" name="priority" style="font-weight: 600;">
+                        <option value="1">🟢 1 - Low Priority</option>
+                        <option value="2">🟡 2 - Below Medium</option>
+                        <option value="3" selected>🟠 3 - Medium Priority</option>
+                        <option value="4">🟠 4 - Above Medium</option>
+                        <option value="5">🔴 5 - High Priority</option>
+                    </select>
+                    <small style="color: var(--text-muted); margin-top: 0.5rem; display: block; font-size: 0.85rem;">
+                        <i class="fas fa-info-circle" style="margin-right: 4px;"></i>Set the urgency level for this task
+                    </small>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="submit" class="btn btn-primary ripple"
+                        style="flex: 1; padding: 14px; font-size: 1rem;">
+                        <i class="fas fa-save" style="margin-right: 8px;"></i>Add Todo
+                    </button>
+                    <a href="/todos/todo-page" class="btn btn-success ripple"
+                        style="flex: 0 0 auto; padding: 14px 24px; font-size: 1rem;">
+                        <i class="fas fa-arrow-left" style="margin-right: 8px;"></i>Back
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Floating decorative elements -->
+    <div
+        style="position: absolute; top: 10%; right: -5%; width: 100px; height: 100px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; opacity: 0.1; animation: floatSlow 9s ease-in-out infinite; z-index: -1;">
+    </div>
+    <div
+        style="position: absolute; bottom: 10%; left: -5%; width: 120px; height: 120px; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); border-radius: 50%; opacity: 0.1; animation: floatMedium 7s ease-in-out infinite; z-index: -1;">
+    </div>
+</div>

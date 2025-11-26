@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: todoapp-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=todoapp
+    networks:
+      - todoapp-network
+
+  fastapi:
+    build: .
+    container_name: todoapp-fastapi
+    ports:
+      - "8081:8081"
+    environment:
+      - MONGODB_URL=mongodb://mongodb:27017
+      - MONGODB_DB_NAME=todoapp
+      - SECRET_KEY=${SECRET_KEY:-change-me-in-production}
+      - SMTP_HOST=smtp.sendgrid.net
+      - SMTP_PORT=587
+      - SMTP_USERNAME=apikey
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - EMAIL_FROM=todosapp@todos.com
+      - SENDER_EMAIL=todosapp@todos.com
+      - SUMMARY_EMAIL_ENABLED=true
+      - DAILY_RESET_ENABLED=true
+    depends_on:
+      - mongodb
+    networks:
+      - todoapp-network
+    volumes:
+      - ./logs:/app/logs
+
+networks:
+  todoapp-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
