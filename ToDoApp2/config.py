@@ -15,8 +15,8 @@ class Settings(BaseSettings):
     debug: bool = False
     
     # MongoDB
-    mongodb_url: str = "mongodb://localhost:27017"
-    mongodb_db_name: str = "todoapp"
+    mongodb_url: str = os.getenv("MONGODB_URL", "mongodb://localhost:27017")
+    mongodb_db_name: str = os.getenv("MONGODB_DB_NAME", "todoapp")
     
     # Security
     secret_key: str = os.getenv('SECRET_KEY', 'change-me-in-production-use-a-secure-random-key')
