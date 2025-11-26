@@ -4,6 +4,7 @@ FastAPI Todo Application - Main Entry Point
 import logging
 from typing import Optional
 from zoneinfo import ZoneInfo
+from contextlib import asynccontextmanager
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler  # type: ignore
 from apscheduler.triggers.cron import CronTrigger  # type: ignore
